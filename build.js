@@ -399,6 +399,25 @@ function assignIds(root) {
   return ids;
 }
 
+/**
+ * 资源版本号：取文件内容的短哈希。
+ * GitHub Pages 对静态资源有 max-age 缓存，文件名不带版本号会导致
+ * 「改了样式但浏览器仍显示旧版」。加上 ?v=<hash> 后内容一变地址就变，浏览器必然重新拉取。
+ */
+function assetVersion(name) {
+  try {
+    const buf = fs.readFileSync(path.join(ASSETS, name));
+    let h = 0x811c9dc5;
+    for (let i = 0; i < buf.length; i++) {
+      h ^= buf[i];
+      h = (h * 0x01000193) >>> 0;
+    }
+    return `?v=${h.toString(36)}`;
+  } catch {
+    return '';
+  }
+}
+
 function renderPage(root, intro) {
   const ids = assignIds(root);
   const navItems = [];
@@ -439,6 +458,16 @@ function renderPage(root, intro) {
       ? `<nav class="toc" aria-label="目录"><div class="toc-inner"><div class="toc-title">目录</div>\n${nav}\n</div></nav>`
       : '';
 
+  const cssV = assetVersion('style.css');
+  const jsV = assetVersion('app.js');
+  // data URI 的空 favicon，避免浏览器再去请求 /favicon.ico（404 会拖慢首屏）
+  const favicon =
+    '<link rel="icon" href="data:image/svg+xml,' +
+    encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#2563eb"/><text x="16" y="23" font-size="19" font-family="sans-serif" font-weight="bold" fill="#fff" text-anchor="middle">C</text></svg>'
+    ) +
+    '" />';
+
   return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -446,7 +475,8 @@ function renderPage(root, intro) {
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>${intro ? escapeHtml(intro.name) + ' 的主页' : '个人主页'}</title>
 <meta name="description" content="${intro ? escapeHtml(intro.name) + ' 的个人主页与项目经历' : '个人主页'}" />
-<link rel="stylesheet" href="assets/style.css" />
+<link rel="stylesheet" href="assets/style.css${cssV}" />
+${favicon}
 </head>
 <body>
 <a class="skip" href="#main">跳到正文</a>
@@ -457,7 +487,7 @@ ${root.children.map((c) => renderNode(c, ids)).join('\n')}
 </main>
 <footer class="footer">由 build.js 自动生成 · 内容来自仓库目录</footer>
 <div class="lightbox" id="lightbox" hidden><button class="lb-close" aria-label="关闭">✕</button><button class="lb-nav lb-prev" aria-label="上一张">‹</button><img alt="" /><button class="lb-nav lb-next" aria-label="下一张">›</button></div>
-<script src="assets/app.js"></script>
+<script src="assets/app.js${jsV}"></script>
 </body>
 </html>
 `;
