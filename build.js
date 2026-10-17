@@ -44,6 +44,13 @@ const MEDIA_EXT = {
 
 /* ------------------------------------------------------------------ 工具 */
 
+/** 把数组按 size 分块，用于把简介字段排成一行几个 */
+function chunk(arr, size) {
+  const out = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+}
+
 const isDir = (p) => fs.existsSync(p) && fs.statSync(p).isDirectory();
 
 function listDir(dir) {
@@ -343,7 +350,9 @@ function renderMediaRows(node) {
           return `<figure class="cell cell-file"><a href="${src}" target="_blank" rel="noopener">📎 ${label}</a></figure>`;
         })
         .join('\n');
-      return `<div class="media-row">\n${cells}\n</div>`;
+      // cols：用于 CSS 判断单个居中 / 多列等间距
+      const cols = row.length === 1 ? 'single' : `multi n${Math.min(row.length, 4)}`;
+      return `<div class="media-row" data-cols="${cols}">\n${cells}\n</div>`;
     })
     .join('\n');
 }
@@ -407,12 +416,18 @@ function renderPage(root, intro) {
     ? `<header class="intro" id="top">
   <h1 class="intro-name">${escapeHtml(intro.name)}</h1>
   <div class="intro-meta">
-    ${intro.items
+    ${chunk(intro.items, 3)
       .map(
-        (i) =>
-          i.k
-            ? `<div class="meta-item"><span class="meta-k">${escapeHtml(i.k)}</span><span class="meta-v">${inline(i.v)}</span></div>`
-            : `<div class="meta-item"><span class="meta-v">${inline(i.v)}</span></div>`
+        (row) => `<div class="intro-row">
+      ${row
+        .map(
+          (i) =>
+            i.k
+              ? `<div class="meta-item"><span class="meta-k">${escapeHtml(i.k)}</span><span class="meta-v">${inline(i.v)}</span></div>`
+              : `<div class="meta-item"><span class="meta-v">${inline(i.v)}</span></div>`
+        )
+        .join('\n      ')}
+    </div>`
       )
       .join('\n    ')}
   </div>
@@ -421,7 +436,7 @@ function renderPage(root, intro) {
 
   const toc =
     navItems.length > 1
-      ? `<nav class="toc" aria-label="目录"><div class="toc-title">目录</div>\n${nav}\n</nav>`
+      ? `<nav class="toc" aria-label="目录"><div class="toc-inner"><div class="toc-title">目录</div>\n${nav}\n</div></nav>`
       : '';
 
   return `<!DOCTYPE html>

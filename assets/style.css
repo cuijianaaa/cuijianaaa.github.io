@@ -9,6 +9,7 @@
   --code-bg: #f2f3f5;
   --radius: 10px;
   --maxw: 1080px;
+  --pad: 20px;
 }
 
 * { box-sizing: border-box; }
@@ -42,7 +43,7 @@ a:hover { text-decoration: underline; }
 .intro {
   background: linear-gradient(160deg, #ffffff 0%, #f2f6ff 100%);
   border-bottom: 1px solid var(--border);
-  padding: 44px 20px 32px;
+  padding: 44px var(--pad) 32px;
 }
 .intro > * { max-width: var(--maxw); margin-left: auto; margin-right: auto; }
 
@@ -55,10 +56,17 @@ a:hover { text-decoration: underline; }
   color: #111;
 }
 
+/* 简介字段：一行最多 3 个（性别 / 出生年月 / 邮箱一行，其余一行） */
 .intro-meta {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 8px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.intro-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 40px;
 }
 .meta-item { display: flex; gap: 10px; align-items: baseline; font-size: 15px; }
 .meta-k {
@@ -80,13 +88,16 @@ a:hover { text-decoration: underline; }
   background: rgba(246, 247, 249, .92);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
-  padding: 10px 20px;
+  padding: 10px var(--pad);
+}
+/* 目录内容与正文保持同样的最大宽度和页边距 */
+.toc-inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
   gap: 6px 8px;
   align-items: center;
-  max-height: 40vh;
-  overflow: auto;
 }
 .toc-title {
   font-size: 12px; color: var(--muted); letter-spacing: 2px;
@@ -105,7 +116,7 @@ a:hover { text-decoration: underline; }
 
 /* ----------------------------------------------------------------- 正文 */
 
-main { max-width: var(--maxw); margin: 0 auto; padding: 8px 20px 80px; }
+main { max-width: var(--maxw); margin: 0 auto; padding: 8px var(--pad) 80px; }
 
 .node { margin: 34px 0; }
 .node-d0 { margin-top: 46px; }
@@ -162,18 +173,27 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 8px 20px 80px; }
 /* --------------------------------------------------------------- 媒体 */
 
 .media { display: flex; flex-direction: column; gap: 14px; margin: 4px 0 18px; }
+
+/* 所有媒体行都与文字同页边距；单个居中，多个等间距紧凑排列 */
 .media-row {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 14px;
+  gap: 8px;                        /* 紧凑间距，让图片更大 */
+  justify-content: center;
+  align-items: start;
 }
+.media-row[data-cols^="single"] { grid-template-columns: minmax(0, 1fr); }
+.media-row[data-cols="multi n2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.media-row[data-cols="multi n3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.media-row[data-cols="multi n4"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
 .cell {
   margin: 0;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 8px;
+  padding: 6px;
   overflow: hidden;
+  min-width: 0;
 }
 .cell img, .cell video {
   display: block; width: 100%; height: auto;
@@ -182,11 +202,14 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 8px 20px 80px; }
 .cell img { cursor: zoom-in; }
 .cell video { aspect-ratio: 16 / 9; object-fit: contain; }
 .cell figcaption {
-  margin-top: 7px; font-size: 12.5px; color: var(--muted);
+  margin-top: 6px; font-size: 12.5px; color: var(--muted);
   text-align: center; word-break: break-all;
 }
 .cell-file { display: flex; align-items: center; justify-content: center; min-height: 64px; }
 .cell-file a { font-size: 14px; }
+
+/* 单个视频/图片时限制最大宽度，避免超宽铺满 */
+.media-row[data-cols^="single"] .cell { max-width: 720px; margin: 0 auto; }
 
 /* ----------------------------------------------------------------- 其它 */
 
@@ -214,9 +237,15 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 8px 20px 80px; }
 .lb-next { right: 18px; }
 .lb-close:hover, .lb-nav:hover { background: rgba(255, 255, 255, .28); }
 
+@media (max-width: 860px) {
+  .media-row[data-cols="multi n3"],
+  .media-row[data-cols="multi n4"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 @media (max-width: 640px) {
-  .media-row { grid-template-columns: 1fr; }
+  .media-row { grid-template-columns: minmax(0, 1fr) !important; }
   .anchor { display: none; }
   .intro { padding: 30px 16px 22px; }
   main { padding: 4px 16px 60px; }
+  .toc { padding: 8px 16px; }
+  :root { --pad: 16px; }
 }
