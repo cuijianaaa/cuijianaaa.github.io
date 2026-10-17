@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>崔健 的主页</title>
+<meta name="description" content="崔健 的个人主页与项目经历" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="intro" id="top">
+  <h1 class="intro-name">崔健</h1>
+  <div class="intro-meta">
+    <div class="meta-item"><span class="meta-k">性 别</span><span class="meta-v">男</span></div>
+    <div class="meta-item"><span class="meta-k">出生年月</span><span class="meta-v">1993.2</span></div>
+    <div class="meta-item"><span class="meta-k">邮 箱</span><span class="meta-v">cuijian2015@qq.com</span></div>
+    <div class="meta-item"><span class="meta-k">研究方向</span><span class="meta-v">计算机视觉，深度学习，感知，大模型，端到端</span></div>
+    <div class="meta-item"><span class="meta-k">学 历</span><span class="meta-v">哈尔滨工业大学 电子信息工程专业 本科 2012—2016</span></div>
+  </div>
+</header>
+<nav class="toc" aria-label="目录"><div class="toc-title">目录</div>
+<a class="nav-i nav-d0" href="#n0-项目经历">项目经历</a>
+<a class="nav-i nav-d1" href="#n1-小马智行项目">小马智行项目</a>
+<a class="nav-i nav-d2" href="#n2-基于ipm的多传感器融合bev模型">基于IPM的多传感器融合BEV模型</a>
+<a class="nav-i nav-d2" href="#n2-基于lss的多传感器融合bev模型">基于LSS的多传感器融合BEV模型</a>
+<a class="nav-i nav-d2" href="#n2-3d-occupancy">3D Occupancy</a>
+<a class="nav-i nav-d2" href="#n2-单目3d目标检测">单目3D目标检测</a>
+<a class="nav-i nav-d2" href="#n2-单目伪3d目标检测">单目伪3D目标检测</a>
+<a class="nav-i nav-d1" href="#n1-大学项目">大学项目</a>
+<a class="nav-i nav-d2" href="#n2-飞思卡尔智能车">飞思卡尔智能车</a>
+<a class="nav-i nav-d2" href="#n2-神经网络智能车">神经网络智能车</a>
+<a class="nav-i nav-d2" href="#n2-四轴无人机">四轴无人机</a>
+<a class="nav-i nav-d1" href="#n1-业余项目">业余项目</a>
+<a class="nav-i nav-d2" href="#n2-自制3d打印仓鼠玩具">自制3D打印仓鼠玩具</a>
+<a class="nav-i nav-d2" href="#n2-自制基于vla的机械臂">自制基于VLA的机械臂</a>
+</nav>
+<main id="main">
+<section class="node node-d0" id="n0-项目经历">
+  <h2 class="node-title"><a class="anchor" href="#n0-项目经历" aria-hidden="true">#</a>项目经历</h2>
+  
+  <section class="node node-d1" id="n1-小马智行项目">
+  <h3 class="node-title"><a class="anchor" href="#n1-小马智行项目" aria-hidden="true">#</a>小马智行项目</h3>
+  
+  <section class="node node-d2" id="n2-基于ipm的多传感器融合bev模型">
+  <h4 class="node-title"><a class="anchor" href="#n2-基于ipm的多传感器融合bev模型" aria-hidden="true">#</a>基于IPM的多传感器融合BEV模型</h4>
+  <div class="rich">
+<div class="rt-kv"><div class="rt-k">输入</div><div class="rt-v">车周围一圈摄像头图像，多个激光雷达</div></div>
+<div class="rt-kv"><div class="rt-k">输出</div><div class="rt-v">车周围一定范围的目标物体位置和大小</div></div>
+<div class="rt-kv"><div class="rt-k">方案</div><div class="rt-v">多个摄像头图像经过图像的backbone之后，不同scale的feature通过ipm投影到BEV空间，多个激光雷达的点云通过特征提取和voxelization把激光雷达的特征也变换到BEV空间，激光雷达的特征经过激光雷达的backbone，然后和图像的BEV特征进行concat，最终接输出预测的head预测3d box</div></div>
+<p class="rt-label">改进点细节</p>
+<ol>
+<li>数据增强，图像色彩，bev空间flip，旋转，drop sensor等</li>
+<li>多层ipm，增加height预测，多层ipm按照高度分布预测加权</li>
+<li>多帧时序，多帧bev feature对齐拼接</li>
+</ol>
+</div>
+<div class="media">
+<div class="media-row">
+<figure class="cell" data-figure><img src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/1_%E5%B0%8F%E9%A9%AC%E6%99%BA%E8%A1%8C%E9%A1%B9%E7%9B%AE/1_%E5%9F%BA%E4%BA%8EIPM%E7%9A%84%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88BEV%E6%A8%A1%E5%9E%8B/1.png" alt="1" loading="lazy" decoding="async" /><figcaption>1</figcaption></figure>
+</div>
+<div class="media-row">
+<figure class="cell" data-figure><img src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/1_%E5%B0%8F%E9%A9%AC%E6%99%BA%E8%A1%8C%E9%A1%B9%E7%9B%AE/1_%E5%9F%BA%E4%BA%8EIPM%E7%9A%84%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88BEV%E6%A8%A1%E5%9E%8B/2.png" alt="2" loading="lazy" decoding="async" /><figcaption>2</figcaption></figure>
+</div>
+</div>
+  
+</section>
+<section class="node node-d2" id="n2-基于lss的多传感器融合bev模型">
+  <h4 class="node-title"><a class="anchor" href="#n2-基于lss的多传感器融合bev模型" aria-hidden="true">#</a>基于LSS的多传感器融合BEV模型</h4>
+  <div class="rich">
+<div class="rt-kv"><div class="rt-k">输入</div><div class="rt-v">车周围一圈摄像头图像，多个激光雷达</div></div>
+<div class="rt-kv"><div class="rt-k">输出</div><div class="rt-v">车周围一定范围的目标物体位置和大小</div></div>
+<div class="rt-kv"><div class="rt-k">方案</div><div class="rt-v">多个摄像头图像经过图像的backbone之后，预测特征和深度分布，深度分布对于每个像素而言是一条camera发出的射线，所有像素的摄像构成一个视锥，把特征和深度分布点乘把特征放至视锥对应位置，然后按照空间网格voxelization成bev特征， 多个激光雷达的点云通过特征提取和voxelization把激光雷达的特征也变换到BEV空间，激光雷达的特征经过激光雷达的backbone，然后和图像的BEV特征进行concat，最终接输出预测的head预测3d box</div></div>
+<p class="rt-label">改进点细节</p>
+<ol>
+<li>数据增强，图像色彩，bev空间flip，旋转，drop sensor等</li>
+<li>增加深度分布的真值作为监督</li>
+<li>多帧时序，多帧bev feature对齐拼接</li>
+</ol>
+</div>
+<div class="media">
+<div class="media-row">
+<figure class="cell" data-figure><img src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/1_%E5%B0%8F%E9%A9%AC%E6%99%BA%E8%A1%8C%E9%A1%B9%E7%9B%AE/2_%E5%9F%BA%E4%BA%8ELSS%E7%9A%84%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88BEV%E6%A8%A1%E5%9E%8B/1.png" alt="1" loading="lazy" decoding="async" /><figcaption>1</figcaption></figure>
+</div>
+<div class="media-row">
+<figure class="cell" data-figure><img src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/1_%E5%B0%8F%E9%A9%AC%E6%99%BA%E8%A1%8C%E9%A1%B9%E7%9B%AE/2_%E5%9F%BA%E4%BA%8ELSS%E7%9A%84%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88BEV%E6%A8%A1%E5%9E%8B/2_1.png" alt="2_1" loading="lazy" decoding="async" /><figcaption>2_1</figcaption></figure>
+<figure class="cell" data-figure><img src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/1_%E5%B0%8F%E9%A9%AC%E6%99%BA%E8%A1%8C%E9%A1%B9%E7%9B%AE/2_%E5%9F%BA%E4%BA%8ELSS%E7%9A%84%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88BEV%E6%A8%A1%E5%9E%8B/2_2.png" alt="2_2" loading="lazy" decoding="async" /><figcaption>2_2</figcaption></figure>
+</div>
+</div>
+  
+</section>
+<section class="node node-d2" id="n2-3d-occupancy">
+  <h4 class="node-title"><a class="anchor" href="#n2-3d-occupancy" aria-hidden="true">#</a>3D Occupancy</h4>
+  <div class="rich">
+<div class="rt-kv"><div class="rt-k">输入</div><div class="rt-v">车周围一圈摄像头图像，多个激光雷达</div></div>
+<div class="rt-kv"><div class="rt-k">输出</div><div class="rt-v">车周围一定范围的3D occupancy</div></div>
+<div class="rt-kv"><div class="rt-k">方案</div><div class="rt-v">多个摄像头图像经过图像的backbone之后，预测特征和深度分布，深度分布对于每个像素而言是一条camera发出的射线，所有像素的摄像构成一个视锥，把特征和深度分布点乘把特征放至视锥对应位置，然后按照空间网格voxelization成bev特征， 多个激光雷达的点云通过特征提取和voxelization把激光雷达的特征也变换到BEV空间，激光雷达的特征经过激光雷达的backbone，然后和图像的BEV特征进行concat，最终接输出预测的head预测3d occupancy</div></div>
+<p class="rt-label">改进点细节</p>
+<ol>
+<li>数据增强，图像色彩，bev空间flip，旋转，drop sensor等</li>
+<li>增加深度分布的真值作为监督</li>
+<li>累计目标车多帧点云作为gt，单帧的目标点云太稀疏</li>
+</ol>
+</div>
+<div class="media">
+<div class="media-row">
+<figure class="cell" data-figure><img src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/1_%E5%B0%8F%E9%A9%AC%E6%99%BA%E8%A1%8C%E9%A1%B9%E7%9B%AE/3_3D%20Occupancy/1.png" alt="1" loading="lazy" decoding="async" /><figcaption>1</figcaption></figure>
+</div>
+</div>
+  
+</section>
+<section class="node node-d2" id="n2-单目3d目标检测">
+  <h4 class="node-title"><a class="anchor" href="#n2-单目3d目标检测" aria-hidden="true">#</a>单目3D目标检测</h4>
+  <div class="rich">
+<div class="rt-kv"><div class="rt-k">输入</div><div class="rt-v">摄像头图像</div></div>
+<div class="rt-kv"><div class="rt-k">输出</div><div class="rt-v">摄像头出现障碍物的2d/3d box，和属性</div></div>
+<div class="rt-kv"><div class="rt-k">方案</div><div class="rt-v">摄像头图像经过第一个stage的backbone后接yolo 2d detection, 第二个stage用第一stage的2d box 从backbone feature crop出roi feature作为第二stage的输入，第二stage接head 预测3d box（depth/heading），和遮挡截断等属性</div></div>
+<p class="rt-label">改进点细节</p>
+<ol>
+<li>数据增强，图像色彩，flip，crop，resize等</li>
+<li>预测观察视角代替heading</li>
+</ol>
+</div>
+<div class="media">
+<div class="media-row">
+<figure class="cell" data-figure><img src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/1_%E5%B0%8F%E9%A9%AC%E6%99%BA%E8%A1%8C%E9%A1%B9%E7%9B%AE/4_%E5%8D%95%E7%9B%AE3D%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/1_1.png" alt="1_1" loading="lazy" decoding="async" /><figcaption>1_1</figcaption></figure>
+<figure class="cell" data-figure><img src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/1_%E5%B0%8F%E9%A9%AC%E6%99%BA%E8%A1%8C%E9%A1%B9%E7%9B%AE/4_%E5%8D%95%E7%9B%AE3D%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/1_2.png" alt="1_2" loading="lazy" decoding="async" /><figcaption>1_2</figcaption></figure>
+</div>
+</div>
+  
+</section>
+<section class="node node-d2" id="n2-单目伪3d目标检测">
+  <h4 class="node-title"><a class="anchor" href="#n2-单目伪3d目标检测" aria-hidden="true">#</a>单目伪3D目标检测</h4>
+  <div class="rich">
+<div class="rt-kv"><div class="rt-k">输入</div><div class="rt-v">摄像头图像</div></div>
+<div class="rt-kv"><div class="rt-k">输出</div><div class="rt-v">摄像头出现障碍物的2d box，伪3d box</div></div>
+<div class="rt-kv"><div class="rt-k">方案</div><div class="rt-v">摄像头图像经过第一个stage的backbone后接yolo 2d detection, 第二个stage用第一stage的2d box 从backbone feature crop出roi feature作为第二stage的输入，第二stage接head 预测伪3d box（竖线，斜线）</div></div>
+<p class="rt-label">改进点细节</p>
+<ol>
+<li>数据增强，图像色彩，flip，crop，resize等</li>
+</ol>
+</div>
+  
+</section>
+</section>
+<section class="node node-d1" id="n1-大学项目">
+  <h3 class="node-title"><a class="anchor" href="#n1-大学项目" aria-hidden="true">#</a>大学项目</h3>
+  
+  <section class="node node-d2" id="n2-飞思卡尔智能车">
+  <h4 class="node-title"><a class="anchor" href="#n2-飞思卡尔智能车" aria-hidden="true">#</a>飞思卡尔智能车</h4>
+  <div class="media">
+<div class="media-row">
+<figure class="cell" data-figure><img src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/2_%E5%A4%A7%E5%AD%A6%E9%A1%B9%E7%9B%AE/1_%E9%A3%9E%E6%80%9D%E5%8D%A1%E5%B0%94%E6%99%BA%E8%83%BD%E8%BD%A6/0.jpg" alt="0" loading="lazy" decoding="async" /><figcaption>0</figcaption></figure>
+</div>
+<div class="media-row">
+<figure class="cell cell-video"><video src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/2_%E5%A4%A7%E5%AD%A6%E9%A1%B9%E7%9B%AE/1_%E9%A3%9E%E6%80%9D%E5%8D%A1%E5%B0%94%E6%99%BA%E8%83%BD%E8%BD%A6/1.mp4" controls preload="metadata" playsinline></video><figcaption>1</figcaption></figure>
+</div>
+<div class="media-row">
+<figure class="cell cell-video"><video src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/2_%E5%A4%A7%E5%AD%A6%E9%A1%B9%E7%9B%AE/1_%E9%A3%9E%E6%80%9D%E5%8D%A1%E5%B0%94%E6%99%BA%E8%83%BD%E8%BD%A6/2.mp4" controls preload="metadata" playsinline></video><figcaption>2</figcaption></figure>
+</div>
+<div class="media-row">
+<figure class="cell cell-video"><video src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/2_%E5%A4%A7%E5%AD%A6%E9%A1%B9%E7%9B%AE/1_%E9%A3%9E%E6%80%9D%E5%8D%A1%E5%B0%94%E6%99%BA%E8%83%BD%E8%BD%A6/3.mp4" controls preload="metadata" playsinline></video><figcaption>3</figcaption></figure>
+</div>
+</div>
+  
+</section>
+<section class="node node-d2" id="n2-神经网络智能车">
+  <h4 class="node-title"><a class="anchor" href="#n2-神经网络智能车" aria-hidden="true">#</a>神经网络智能车</h4>
+  <div class="media">
+<div class="media-row">
+<figure class="cell" data-figure><img src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/2_%E5%A4%A7%E5%AD%A6%E9%A1%B9%E7%9B%AE/2_%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%99%BA%E8%83%BD%E8%BD%A6/1.jpg" alt="1" loading="lazy" decoding="async" /><figcaption>1</figcaption></figure>
+</div>
+<div class="media-row">
+<figure class="cell cell-video"><video src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/2_%E5%A4%A7%E5%AD%A6%E9%A1%B9%E7%9B%AE/2_%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%99%BA%E8%83%BD%E8%BD%A6/2.mp4" controls preload="metadata" playsinline></video><figcaption>2</figcaption></figure>
+</div>
+</div>
+  
+</section>
+<section class="node node-d2" id="n2-四轴无人机">
+  <h4 class="node-title"><a class="anchor" href="#n2-四轴无人机" aria-hidden="true">#</a>四轴无人机</h4>
+  <div class="media">
+<div class="media-row">
+<figure class="cell cell-video"><video src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/2_%E5%A4%A7%E5%AD%A6%E9%A1%B9%E7%9B%AE/3_%E5%9B%9B%E8%BD%B4%E6%97%A0%E4%BA%BA%E6%9C%BA/1.mp4" controls preload="metadata" playsinline></video><figcaption>1</figcaption></figure>
+</div>
+<div class="media-row">
+<figure class="cell cell-video"><video src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/2_%E5%A4%A7%E5%AD%A6%E9%A1%B9%E7%9B%AE/3_%E5%9B%9B%E8%BD%B4%E6%97%A0%E4%BA%BA%E6%9C%BA/2.mp4" controls preload="metadata" playsinline></video><figcaption>2</figcaption></figure>
+</div>
+</div>
+  
+</section>
+</section>
+<section class="node node-d1" id="n1-业余项目">
+  <h3 class="node-title"><a class="anchor" href="#n1-业余项目" aria-hidden="true">#</a>业余项目</h3>
+  
+  <section class="node node-d2" id="n2-自制3d打印仓鼠玩具">
+  <h4 class="node-title"><a class="anchor" href="#n2-自制3d打印仓鼠玩具" aria-hidden="true">#</a>自制3D打印仓鼠玩具</h4>
+  <div class="media">
+<div class="media-row">
+<figure class="cell cell-video"><video src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/3_%E4%B8%9A%E4%BD%99%E9%A1%B9%E7%9B%AE/1_%E8%87%AA%E5%88%B63D%E6%89%93%E5%8D%B0%E4%BB%93%E9%BC%A0%E7%8E%A9%E5%85%B7/1.mp4" controls preload="metadata" playsinline></video><figcaption>1</figcaption></figure>
+</div>
+<div class="media-row">
+<figure class="cell cell-video"><video src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/3_%E4%B8%9A%E4%BD%99%E9%A1%B9%E7%9B%AE/1_%E8%87%AA%E5%88%B63D%E6%89%93%E5%8D%B0%E4%BB%93%E9%BC%A0%E7%8E%A9%E5%85%B7/2.mp4" controls preload="metadata" playsinline></video><figcaption>2</figcaption></figure>
+</div>
+<div class="media-row">
+<figure class="cell cell-video"><video src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/3_%E4%B8%9A%E4%BD%99%E9%A1%B9%E7%9B%AE/1_%E8%87%AA%E5%88%B63D%E6%89%93%E5%8D%B0%E4%BB%93%E9%BC%A0%E7%8E%A9%E5%85%B7/3.mp4" controls preload="metadata" playsinline></video><figcaption>3</figcaption></figure>
+</div>
+</div>
+  
+</section>
+<section class="node node-d2" id="n2-自制基于vla的机械臂">
+  <h4 class="node-title"><a class="anchor" href="#n2-自制基于vla的机械臂" aria-hidden="true">#</a>自制基于VLA的机械臂</h4>
+  <div class="rich">
+<p>整个机器人小车模仿开源机器人LeKiwi，但是这个全买下来要四五千，我制作的版本成本几百元</p>
+<div class="rt-kv"><div class="rt-k">机械</div><div class="rt-v">模仿SO-101，自己画3D图纸，用3d打印制作缩小版so-101，关节构造类似，尺寸不一样</div></div>
+<div class="rt-kv"><div class="rt-k">硬件</div><div class="rt-v">机械臂6个用飞特scs0009舵机，主控是esp32，接ov2640 camera，电机驱动，电机</div></div>
+<div class="rt-kv"><div class="rt-k">底层软件</div><div class="rt-v">esp32通过wifi和局域网中的电脑连接，esp32实时发送图像到电脑，电脑端键盘可以控制机械臂移动，可以控制小车移动</div></div>
+<div class="rt-kv"><div class="rt-k">VLA算法</div><div class="rt-v">电脑同步记录机械臂的控制信号，小车移动信号和摄像头图像，作为训练数据，训练SmolVLA，最终可以实现小车自动捡垃圾到垃圾桶</div></div>
+</div>
+<div class="media">
+<div class="media-row">
+<figure class="cell" data-figure><img src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/3_%E4%B8%9A%E4%BD%99%E9%A1%B9%E7%9B%AE/2_%E8%87%AA%E5%88%B6%E5%9F%BA%E4%BA%8EVLA%E7%9A%84%E6%9C%BA%E6%A2%B0%E8%87%82/1.jpg" alt="1" loading="lazy" decoding="async" /><figcaption>1</figcaption></figure>
+</div>
+<div class="media-row">
+<figure class="cell cell-video"><video src="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86/3_%E4%B8%9A%E4%BD%99%E9%A1%B9%E7%9B%AE/2_%E8%87%AA%E5%88%B6%E5%9F%BA%E4%BA%8EVLA%E7%9A%84%E6%9C%BA%E6%A2%B0%E8%87%82/2.mp4" controls preload="metadata" playsinline></video><figcaption>2</figcaption></figure>
+</div>
+</div>
+  
+</section>
+</section>
+</section>
+</main>
+<footer class="footer">由 build.js 自动生成 · 内容来自仓库目录</footer>
+<div class="lightbox" id="lightbox" hidden><button class="lb-close" aria-label="关闭">✕</button><button class="lb-nav lb-prev" aria-label="上一张">‹</button><img alt="" /><button class="lb-nav lb-next" aria-label="下一张">›</button></div>
+<script src="assets/app.js"></script>
+</body>
+</html>

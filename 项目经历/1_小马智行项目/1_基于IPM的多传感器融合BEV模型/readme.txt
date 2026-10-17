@@ -1,0 +1,7 @@
+输入：车周围一圈摄像头图像，多个激光雷达
+输出：车周围一定范围的目标物体位置和大小
+方案：多个摄像头图像经过图像的backbone之后，不同scale的feature通过ipm投影到BEV空间，多个激光雷达的点云通过特征提取和voxelization把激光雷达的特征也变换到BEV空间，激光雷达的特征经过激光雷达的backbone，然后和图像的BEV特征进行concat，最终接输出预测的head预测3d box
+改进点细节：
+1.数据增强，图像色彩，bev空间flip，旋转，drop sensor等
+2.多层ipm，增加height预测，多层ipm按照高度分布预测加权
+3.多帧时序，多帧bev feature对齐拼接
