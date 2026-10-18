@@ -179,7 +179,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 8px var(--pad) 80px; }
   display: grid;
   gap: 8px;                        /* 紧凑间距，让图片更大 */
   justify-content: center;
-  align-items: start;
+  align-items: center;             /* 每格内的媒体在本列中垂直居中 */
 }
 .media-row[data-cols^="single"] { grid-template-columns: minmax(0, 1fr); }
 .media-row[data-cols="multi n2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -194,6 +194,12 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 8px var(--pad) 80px; }
   padding: 6px;
   overflow: hidden;
   min-width: 0;
+  /* 图片 + 图注作为整体，在所属网格单元内水平居中 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 .cell img, .cell video {
   display: block; width: 100%; height: auto;
