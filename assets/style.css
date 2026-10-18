@@ -40,12 +40,23 @@ a:hover { text-decoration: underline; }
 
 /* ---------------------------------------------------------- 顶部个人介绍 */
 
+/*
+ * 关键：intro / toc / main 三者的内容盒左边缘必须完全一致。
+ * 做法是让 .intro 自己充当「居中容器」（与 main 同为 max-width + padding），
+ * 而不是给它的子元素再加 max-width —— 后者会让 h1 贴到 padding 边缘，
+ * 与正文错位 91px。
+ */
 .intro {
   background: linear-gradient(160deg, #ffffff 0%, #f2f6ff 100%);
   border-bottom: 1px solid var(--border);
+}
+/* 内层容器：与 main 完全相同的居中方式，保证内容左边缘对齐 */
+.intro-inner {
+  max-width: var(--maxw);
+  margin-left: auto;
+  margin-right: auto;
   padding: 44px var(--pad) 32px;
 }
-.intro > * { max-width: var(--maxw); margin-left: auto; margin-right: auto; }
 
 .intro-name {
   margin: 0 0 18px;
@@ -88,12 +99,13 @@ a:hover { text-decoration: underline; }
   background: rgba(246, 247, 249, .92);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
-  padding: 10px var(--pad);
 }
-/* 目录内容与正文保持同样的最大宽度和页边距 */
+/* 内层容器：与 .intro-inner / main 完全同构，保证三者内容左边缘一致 */
 .toc-inner {
   max-width: var(--maxw);
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px var(--pad);
   display: flex;
   flex-wrap: wrap;
   gap: 6px 8px;
@@ -250,8 +262,8 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 8px var(--pad) 80px; }
 @media (max-width: 640px) {
   .media-row { grid-template-columns: minmax(0, 1fr) !important; }
   .anchor { display: none; }
-  .intro { padding: 30px 16px 22px; }
+  .intro-inner { padding: 30px 16px 22px; }
   main { padding: 4px 16px 60px; }
-  .toc { padding: 8px 16px; }
+  .toc-inner { padding: 8px 16px; }
   :root { --pad: 16px; }
 }

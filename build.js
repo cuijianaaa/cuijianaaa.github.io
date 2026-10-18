@@ -433,22 +433,24 @@ function renderPage(root, intro) {
 
   const introHTML = intro
     ? `<header class="intro" id="top">
-  <h1 class="intro-name">${escapeHtml(intro.name)}</h1>
-  <div class="intro-meta">
-    ${chunk(intro.items, 3)
-      .map(
-        (row) => `<div class="intro-row">
-      ${row
+  <div class="intro-inner">
+    <h1 class="intro-name">${escapeHtml(intro.name)}</h1>
+    <div class="intro-meta">
+      ${chunk(intro.items, 3)
         .map(
-          (i) =>
-            i.k
-              ? `<div class="meta-item"><span class="meta-k">${escapeHtml(i.k)}</span><span class="meta-v">${inline(i.v)}</span></div>`
-              : `<div class="meta-item"><span class="meta-v">${inline(i.v)}</span></div>`
+          (row) => `<div class="intro-row">
+        ${row
+          .map(
+            (i) =>
+              i.k
+                ? `<div class="meta-item"><span class="meta-k">${escapeHtml(i.k)}</span><span class="meta-v">${inline(i.v)}</span></div>`
+                : `<div class="meta-item"><span class="meta-v">${inline(i.v)}</span></div>`
+          )
+          .join('\n        ')}
+      </div>`
         )
         .join('\n      ')}
-    </div>`
-      )
-      .join('\n    ')}
+    </div>
   </div>
 </header>`
     : '';
