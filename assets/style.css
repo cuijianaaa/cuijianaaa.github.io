@@ -10,6 +10,8 @@
   --radius: 10px;
   --maxw: 1080px;
   --pad: 20px;
+  /* 简介区项之间的最小横向间隔；实际间距由 space-between 自动均分，通常远大于此 */
+  --meta-gap: 28px;
 }
 
 * { box-sizing: border-box; }
@@ -71,15 +73,22 @@ a:hover { text-decoration: underline; }
 .intro-meta {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  /* 行间距 */
+  gap: 14px;
 }
+/*
+ * 每行两端对齐内容区边界（space-between），项间距由剩余空间自动均分。
+ * 这样不管每行有几项、文字多长，左右都恰好顶到页边距，无需手调数值。
+ * --meta-gap 作为最小间隔保底，防止项多时挤在一起。
+ */
 .intro-row {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 6px 40px;
+  justify-content: space-between;
+  gap: 6px var(--meta-gap);
 }
-.meta-item { display: flex; gap: 10px; align-items: baseline; font-size: 15px; }
+.meta-item { display: flex; gap: 14px; align-items: baseline; font-size: 15px; }
 .meta-k {
   flex: 0 0 auto;
   min-width: 4.5em;
