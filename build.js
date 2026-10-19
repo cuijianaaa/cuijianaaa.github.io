@@ -36,10 +36,23 @@ const README_RE = /^readme(\.md|\.txt|\.markdown)?$/i;
 const INTRO_RE = /^简介(\.md|\.txt)?$/;
 
 /**
- * 重点关键词：目录（顶部导航）里标题包含这些词的项目会加粗高亮。
- * 想强调别的项目，把关键词加进来即可（匹配标题包含关系）。
+ * 重点关键词：目录（顶部导航）里命中的项目会加粗高亮。
+ *
+ * 支持两种写法：
+ *   '机械臂'      —— 标题包含即命中（匹配任意层级）
+ *   '项目经历/小马智行项目' —— 按路径前缀匹配，该目录及其所有子项都会加粗
+ *
+ * 想强调别的项目，改这里即可，无需动样式。
  */
-const FEATURED = ['小马智行', '机械臂'];
+const FEATURED = ['项目经历/小马智行项目', '机械臂'];
+
+/** 判断某个节点是否命中重点规则（node 带 ancestors 路径数组） */
+function isFeatured(node) {
+  const full = [...node.ancestors, node.title].join('/');
+  return FEATURED.some((rule) =>
+    rule.includes('/') ? full.includes(rule) : node.title.includes(rule)
+  );
+}
 
 /** 需要原样拷贝到站点的媒体/附件扩展名 */
 const MEDIA_EXT = {
@@ -286,7 +299,7 @@ function mediaKind(file) {
 
 /* ---------------------------------------------------------------- 扫描目录 */
 
-function scanNode(absDir, relDir, depth) {
+function scanNode(absDir, relDir, depth, ancestors = []) {
   const entries = listDir(absDir);
   const folders = entries.filter((e) => e.dir);
   const files = entries.filter((e) => !e.dir);
@@ -305,8 +318,11 @@ function scanNode(absDir, relDir, depth) {
     (f) => !README_RE.test(f.name) && !INTRO_RE.test(f.name) && !mediaKind(f) && /\.(txt|md|markdown)$/i.test(f.name)
   );
 
+  const title = cleanTitle(path.basename(absDir));
+
   return {
-    title: cleanTitle(path.basename(absDir)),
+    title,
+    ancestors,                                // 从根到父级的标题链，用于按路径匹配重点项
     relDir,
     depth,
     readme: readmeFile ? fs.readFileSync(path.join(absDir, readmeFile.name), 'utf8') : '',
@@ -316,7 +332,7 @@ function scanNode(absDir, relDir, depth) {
     })),
     rows: groupMedia(media),
     children: folders.map((f) =>
-      scanNode(path.join(absDir, f.name), path.join(relDir, f.name), depth + 1)
+      scanNode(path.join(absDir, f.name), path.join(relDir, f.name), depth + 1, [...ancestors, title])
     ),
   };
 }
@@ -428,15 +444,14 @@ function renderPage(root, intro) {
   const ids = assignIds(root);
   const navItems = [];
   const buildNav = (n) => {
-    navItems.push({ id: ids.get(n), title: n.title, depth: n.depth });
+    navItems.push({ id: ids.get(n), title: n.title, depth: n.depth, featured: isFeatured(n) });
     n.children.forEach(buildNav);
   };
   root.children.forEach(buildNav);
 
   const nav = navItems
     .map((i) => {
-      // 命中「重点关键词」的目录项加粗高亮
-      const feat = FEATURED.some((kw) => i.title.includes(kw)) ? ' nav-featured' : '';
+      const feat = i.featured ? ' nav-featured' : '';
       return `<a class="nav-i nav-d${i.depth}${feat}" href="#${i.id}">${escapeHtml(i.title)}</a>`;
     })
     .join('\n');
