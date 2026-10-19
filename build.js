@@ -35,6 +35,12 @@ const IGNORE_DIRS = new Set([
 const README_RE = /^readme(\.md|\.txt|\.markdown)?$/i;
 const INTRO_RE = /^简介(\.md|\.txt)?$/;
 
+/**
+ * 重点关键词：目录（顶部导航）里标题包含这些词的项目会加粗高亮。
+ * 想强调别的项目，把关键词加进来即可（匹配标题包含关系）。
+ */
+const FEATURED = ['小马智行', '机械臂'];
+
 /** 需要原样拷贝到站点的媒体/附件扩展名 */
 const MEDIA_EXT = {
   image: ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.bmp', '.svg'],
@@ -428,7 +434,11 @@ function renderPage(root, intro) {
   root.children.forEach(buildNav);
 
   const nav = navItems
-    .map((i) => `<a class="nav-i nav-d${i.depth}" href="#${i.id}">${escapeHtml(i.title)}</a>`)
+    .map((i) => {
+      // 命中「重点关键词」的目录项加粗高亮
+      const feat = FEATURED.some((kw) => i.title.includes(kw)) ? ' nav-featured' : '';
+      return `<a class="nav-i nav-d${i.depth}${feat}" href="#${i.id}">${escapeHtml(i.title)}</a>`;
+    })
     .join('\n');
 
   const introHTML = intro

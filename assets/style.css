@@ -133,7 +133,28 @@ a:hover { text-decoration: underline; }
 .nav-d0 { font-weight: 700; }
 .nav-d1 { background: #fbfbfc; }
 .nav-d2, .nav-d3, .nav-d4 { color: var(--muted); }
+
+/* 重点项目的目录项：加粗 + 深色高亮（关键词在 build.js 的 FEATURED 中配置） */
+.nav-i.nav-featured {
+  font-weight: 800;
+  color: #111;
+  background: #fff;
+  border-color: #b9c3d4;
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, .08);
+}
+.nav-i.nav-featured::after {
+  content: '';
+  display: inline-block;
+  width: 5px; height: 5px;
+  margin-left: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  vertical-align: middle;
+}
+.nav-i.nav-featured:hover { background: var(--accent-soft); }
+
 .nav-i.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.nav-i.active.nav-featured::after { background: #fff; }
 
 /* ----------------------------------------------------------------- 正文 */
 
