@@ -13,16 +13,33 @@
     el.removeAttribute('data-src');
   }
 
+  // 收起时停止播放：暂停并把进度归零，避免折叠后仍在后台出声/占带宽
+  function stopPlayback(box) {
+    [].slice.call(box.querySelectorAll('video')).forEach(function (v) {
+      if (!v.paused) v.pause();
+      try {
+        v.currentTime = 0;
+      } catch (err) {
+        /* 尚未加载完成时设置 currentTime 可能抛错，忽略 */
+      }
+    });
+  }
+
   // 已展开的直接加载
   lazyTargets.forEach(function (el) {
     var box = el.closest('details');
     if (box && box.open) loadNow(el);
   });
 
-  // 监听展开事件
+  // 监听展开 / 收起
   document.addEventListener('toggle', function (e) {
     var t = e.target;
-    if (t.tagName !== 'DETAILS' || !t.open) return;
+    if (t.tagName !== 'DETAILS') return;
+    if (!t.open) {
+      stopPlayback(t);
+      updateToggleText(t);
+      return;
+    }
     [].slice.call(t.querySelectorAll('[data-src]')).forEach(loadNow);
     updateToggleText(t);
   }, true);
@@ -54,7 +71,13 @@
       syncBar();
     });
     btnNone.addEventListener('click', function () {
-      boxes.forEach(function (b) { b.open = false; });
+      boxes.forEach(function (b) {
+        b.open = false;
+        // 立即暂停：批量设 open=false 时，toggle 事件是异步派发的，
+        // 不能只依赖 toggle 监听，否则收起后仍会继续播放
+        stopPlayback(b);
+        updateToggleText(b);
+      });
       syncBar();
     });
     boxes.forEach(function (b) { b.addEventListener('toggle', syncBar); });
