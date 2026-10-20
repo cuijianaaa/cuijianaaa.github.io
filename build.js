@@ -354,24 +354,42 @@ function copyDir(src, dest) {
 
 const urlPath = (p) => p.split(path.sep).map(encodeURIComponent).join('/');
 
+/**
+ * 媒体单元格：默认折叠，折叠头显示名称 + 「点击展开」，展开后显示实际内容。
+ * 用原生 <details>/<summary> 实现：无需 JS、可访问性好、默认可折叠。
+ * 视频/图片的 src 延迟到展开时才加载（见 app.js 的 lazy media），
+ * 这样默认折叠状态下浏览器不会下载任何媒体，页面首屏极快。
+ */
+function renderCell(f, relBase) {
+  const src = `${relBase}${encodeURIComponent(f.name)}`;
+  const label = escapeHtml(fileLabel(f.name));
+  const kindText = f.kind === 'video' ? '视频' : f.kind === 'image' ? '图片' : '附件';
+
+  let body;
+  if (f.kind === 'image') {
+    body = `<img data-src="${src}" alt="${label}" decoding="async" />`;
+  } else if (f.kind === 'video') {
+    body = `<video data-src="${src}" controls preload="none" playsinline></video>`;
+  } else {
+    body = `<a href="${src}" target="_blank" rel="noopener">📎 ${label}</a>`;
+  }
+
+  return `<details class="cell cell-fold" data-kind="${f.kind}">
+      <summary class="fold-head">
+        <span class="fold-badge">${kindText}</span>
+        <span class="fold-name">${label}</span>
+        <span class="fold-toggle" aria-hidden="true">点击展开</span>
+      </summary>
+      <div class="fold-body">${body}</div>
+    </details>`;
+}
+
 function renderMediaRows(node) {
   if (!node.rows.length) return '';
   const relBase = node.relDir ? urlPath(node.relDir) + '/' : '';
   return node.rows
     .map((row) => {
-      const cells = row
-        .map((f) => {
-          const src = `${relBase}${encodeURIComponent(f.name)}`;
-          const label = escapeHtml(fileLabel(f.name));
-          if (f.kind === 'image') {
-            return `<figure class="cell" data-figure><img src="${src}" alt="${label}" loading="lazy" decoding="async" /><figcaption>${label}</figcaption></figure>`;
-          }
-          if (f.kind === 'video') {
-            return `<figure class="cell cell-video"><video src="${src}" controls preload="metadata" playsinline></video><figcaption>${label}</figcaption></figure>`;
-          }
-          return `<figure class="cell cell-file"><a href="${src}" target="_blank" rel="noopener">📎 ${label}</a></figure>`;
-        })
-        .join('\n');
+      const cells = row.map((f) => renderCell(f, relBase)).join('\n');
       // cols：用于 CSS 判断单个居中 / 多列等间距
       const cols = row.length === 1 ? 'single' : `multi n${Math.min(row.length, 4)}`;
       return `<div class="media-row" data-cols="${cols}">\n${cells}\n</div>`;
@@ -482,7 +500,7 @@ function renderPage(root, intro) {
 
   const toc =
     navItems.length > 1
-      ? `<nav class="toc" aria-label="目录"><div class="toc-inner"><div class="toc-title">目录</div>\n${nav}\n</div></nav>`
+      ? `<nav class="toc" aria-label="目录"><div class="toc-inner"><div class="toc-title">目录</div>\n${nav}\n<span class="fold-bar" id="foldAll"><span class="fold-count">0 / 0</span><button type="button" data-act="all">全部展开</button><button type="button" data-act="none">全部收起</button></span></div></nav>`
       : '';
 
   const cssV = assetVersion('style.css');

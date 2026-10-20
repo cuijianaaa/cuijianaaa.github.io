@@ -156,6 +156,33 @@ a:hover { text-decoration: underline; }
 .nav-i.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 .nav-i.active.nav-featured::after { background: #fff; }
 
+/* 全部展开 / 收起 工具条（吸在目录栏右侧） */
+.fold-bar {
+  margin-left: auto;
+  padding-left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.fold-count {
+  font-size: 11.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.fold-bar button {
+  font: inherit;
+  font-size: 12px;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 10px;
+  cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.fold-bar button:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.fold-bar button:active { transform: translateY(.5px); }
+
 /* ----------------------------------------------------------------- 正文 */
 
 main { max-width: var(--maxw); margin: 0 auto; padding: 8px var(--pad) 80px; }
@@ -221,43 +248,92 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 8px var(--pad) 80px; }
   display: grid;
   gap: 8px;                        /* 紧凑间距，让图片更大 */
   justify-content: center;
-  align-items: center;             /* 每格内的媒体在本列中垂直居中 */
+  align-items: start;             /* 折叠时按头高度排布，展开后各自撑开 */
 }
 .media-row[data-cols^="single"] { grid-template-columns: minmax(0, 1fr); }
 .media-row[data-cols="multi n2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .media-row[data-cols="multi n3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .media-row[data-cols="multi n4"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
-.cell {
+/* ---- 可折叠媒体单元（原生 details/summary，默认折叠） ---- */
+
+.cell-fold {
   margin: 0;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 6px;
-  overflow: hidden;
   min-width: 0;
-  /* 图片 + 图注作为整体，在所属网格单元内水平居中 */
+  height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  transition: border-color .15s, box-shadow .15s;
+}
+.cell-fold:hover { border-color: #c9d0da; }
+.cell-fold[open] { border-color: var(--accent); box-shadow: 0 1px 6px rgba(37, 99, 235, .08); }
+
+/* 折叠头：名称 + 点击展开 */
+.fold-head {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  height: 100%;
+  gap: 8px;
+  padding: 9px 11px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: background .15s;
 }
-.cell img, .cell video {
-  display: block; width: 100%; height: auto;
-  border-radius: 6px; background: #000;
+.fold-head::-webkit-details-marker { display: none; }
+.fold-head:hover { background: var(--accent-soft); }
+
+.fold-badge {
+  flex: 0 0 auto;
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--code-bg);
+  border-radius: 4px;
+  padding: 1px 6px;
+  letter-spacing: .5px;
 }
-.cell img { cursor: zoom-in; }
-.cell video { aspect-ratio: 16 / 9; object-fit: contain; }
-.cell figcaption {
-  margin-top: 6px; font-size: 12.5px; color: var(--muted);
-  text-align: center; word-break: break-all;
+.fold-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 13.5px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.cell-file { display: flex; align-items: center; justify-content: center; min-height: 64px; }
-.cell-file a { font-size: 14px; }
+.fold-toggle {
+  flex: 0 0 auto;
+  font-size: 11.5px;
+  color: var(--accent);
+  opacity: .75;
+  transition: opacity .15s;
+}
+.cell-fold[open] .fold-toggle { opacity: .6; }
+
+/* 展开后的内容 */
+.fold-body { padding: 0 7px 8px; }
+.fold-body img,
+.fold-body video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  background: #000;
+}
+.fold-body img { cursor: zoom-in; }
+.fold-body video { aspect-ratio: 16 / 9; object-fit: contain; }
+.fold-body a { font-size: 14px; display: block; padding: 12px 0; text-align: center; }
+/* 未展开时隐藏内容区（省掉空白） */
+.cell-fold:not([open]) .fold-body { display: none; }
+
+/* 附件类没有折叠需求，直接常显 */
+.cell-fold[data-kind="file"] .fold-toggle { display: none; }
 
 /* 单个视频/图片时限制最大宽度，避免超宽铺满 */
-.media-row[data-cols^="single"] .cell { max-width: 720px; margin: 0 auto; }
+.media-row[data-cols^="single"] .cell-fold { max-width: 720px; margin: 0 auto; }
 
 /* ----------------------------------------------------------------- 其它 */
 
